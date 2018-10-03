@@ -1,0 +1,18 @@
+import paramiko
+p=paramiko.SSHClient()
+cred=open("sshcre.csv","r")
+for i in cred.readlines():
+    line=i.strip()
+    ln=line.split(",")
+    p.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    p.connect("%s"%ln[0],port=22,username="%s"%ln[1],password="%s"%ln[2])
+    stdin,stdout,stderr=p.exec_command("hostname")
+    stdin1,stdout1,stderr1=p.exec_command("iptables -L")
+    out=stdout.readlines()
+    out1=stdout1.readlines()
+    out="".join(out)
+    out1="".join(out1)
+    print (f"{ln[0]} HostName: ")
+    print (f"{out}")
+    print (f"IPTABLE Output: ")
+    print (f"{out1}")
